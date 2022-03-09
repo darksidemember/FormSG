@@ -23,7 +23,7 @@ import { DateString } from '~shared/types/generic'
 import { UserDto } from '~shared/types/user'
 import { insertAt } from '~shared/utils/immutable-array-fns'
 
-let formFields: FormFieldDto[] = [
+export const MOCK_FORM_FIELDS: FormFieldDto[] = [
   {
     title: 'Yes/No',
     description: '',
@@ -274,6 +274,7 @@ let formFields: FormFieldDto[] = [
     globalId: '6M755frgrULuCQxhEoYjR7Ab18RdKItsnHQP2NA8UAK',
   },
 ]
+let mutableFormFields = [...MOCK_FORM_FIELDS]
 
 export const createMockForm = (
   props: Partial<AdminFormDto> = {},
@@ -300,7 +301,7 @@ export const createMockForm = (
         inactiveMessage:
           'If you think this is a mistake, please contact the agency that gave you the form link!',
         submissionLimit: null,
-        form_fields: formFields,
+        form_fields: mutableFormFields,
         form_logics: [],
         permissionList: [],
         title: 'Test form title',
@@ -352,12 +353,12 @@ export const createSingleField = (delay = 500) => {
     (req, res, ctx) => {
       const newField = {
         ...req.body,
-        _id: `random-id-${formFields.length}`,
+        _id: `random-id-${mutableFormFields.length}`,
       }
       const newIndex = parseInt(
-        req.url.searchParams.get('to') ?? `${formFields.length}`,
+        req.url.searchParams.get('to') ?? `${mutableFormFields.length}`,
       )
-      formFields = insertAt(formFields, newIndex, newField)
+      mutableFormFields = insertAt(mutableFormFields, newIndex, newField)
       return res(ctx.delay(delay), ctx.status(200), ctx.json(newField))
     },
   )
@@ -367,10 +368,10 @@ export const updateSingleField = (delay = 500) => {
   return rest.put<FormFieldDto, Record<string, never>, FormFieldDto>(
     '/api/v3/admin/forms/:formId/fields/:fieldId',
     (req, res, ctx) => {
-      const index = formFields.findIndex(
+      const index = mutableFormFields.findIndex(
         (field) => field._id === req.params.fieldId,
       )
-      formFields.splice(index, 1, req.body)
+      mutableFormFields.splice(index, 1, req.body)
       return res(ctx.delay(delay), ctx.status(200), ctx.json(req.body))
     },
   )
