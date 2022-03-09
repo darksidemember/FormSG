@@ -17,6 +17,7 @@ import { CreatePageDrawerCloseButton } from '../CreatePageDrawerCloseButton'
 
 import { EditCheckbox } from './EditCheckbox'
 import { EditHeader } from './EditHeader'
+import { EditRadio } from './EditRadio'
 
 export const EditFieldDrawer = (): JSX.Element | null => {
   const clearActiveField = useEditFieldStore(clearActiveFieldSelector)
@@ -67,6 +68,8 @@ const MemoFieldDrawerContent = memo(({ field }: { field: FormFieldDto }) => {
       return <EditHeader field={field} />
     case BasicField.Checkbox:
       return <EditCheckbox field={field} />
+    case BasicField.Radio:
+      return <EditRadio field={field} />
     default:
       return <div>TODO: Insert field options here</div>
   }

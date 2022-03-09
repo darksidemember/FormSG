@@ -49,6 +49,14 @@ export const getFieldCreationMeta = (
         othersRadioButton: false,
       }
     }
+    case BasicField.Radio: {
+      return {
+        fieldType,
+        ...baseMeta,
+        fieldOptions: ['Option 1'],
+        othersRadioButton: false,
+      }
+    }
     default: {
       return {
         fieldType: BasicField.Section,

@@ -15,6 +15,8 @@ import {
 
 import { BasicField, FormFieldDto } from '~shared/types/field'
 
+import RadioField from '~/templates/Field/Radio'
+
 import { useIsMobile } from '~hooks/useIsMobile'
 import IconButton from '~components/IconButton'
 import CheckboxField from '~templates/Field/Checkbox'
@@ -194,6 +196,8 @@ const MemoFieldRow = memo(({ field }: { field: FormFieldDto }) => {
       return <SectionFieldRow field={field} />
     case BasicField.Checkbox:
       return <CheckboxField schema={field} />
+    case BasicField.Radio:
+      return <RadioField schema={field} />
     default:
       return <div>TODO: Add field row for {field.fieldType}</div>
   }
