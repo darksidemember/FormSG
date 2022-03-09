@@ -147,97 +147,54 @@ export const EditRadio = ({ field }: IEditRadioProps): JSX.Element => {
   }, [isSubmitting, tabIndex])
 
   return (
-    <Tabs
-      variant="line-light"
-      display="flex"
-      flexDir="column"
-      flex={1}
-      overflow="hidden"
-      index={tabIndex}
-      onChange={setTabIndex}
-    >
-      <Box
-        px="1rem"
-        pt="1.5rem"
-        borderBottom="1px solid"
-        borderBottomColor="neutral.300"
-      >
-        <TabList
-          overflowX="initial"
-          display="inline-flex"
-          w="max-content"
-          mb="-1px"
+    <DrawerContentContainer>
+      <Stack spacing="2rem" divider={<Divider />}>
+        <FormControl
+          isRequired
+          isReadOnly={mutateFormField.isLoading}
+          isInvalid={!!errors.title}
         >
-          <Tab>General</Tab>
-          <Tab>Options</Tab>
-        </TabList>
-      </Box>
-      <DrawerContentContainer>
-        <TabPanels mb="2rem">
-          <TabPanel>
-            <Stack spacing="2rem" divider={<Divider />}>
-              <FormControl
-                isRequired
-                isReadOnly={mutateFormField.isLoading}
-                isInvalid={!!errors.title}
-              >
-                <FormLabel>Question</FormLabel>
-                <Input
-                  autoFocus
-                  {...register('title', requiredValidationRule)}
-                />
-                <FormErrorMessage>{errors?.title?.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl
-                isRequired
-                isReadOnly={mutateFormField.isLoading}
-                isInvalid={!!errors.description}
-              >
-                <FormLabel>Description</FormLabel>
-                <Textarea {...register('description')} />
-                <FormErrorMessage>
-                  {errors?.description?.message}
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl
-                isRequired
-                isReadOnly={mutateFormField.isLoading}
-                isInvalid={!!errors.fieldOptions}
-              >
-                <FormLabel>Options</FormLabel>
-                <Textarea
-                  {...register('fieldOptions', fieldOptionsValidationRule)}
-                />
-                <FormErrorMessage>
-                  {errors?.fieldOptions?.message}
-                </FormErrorMessage>
-              </FormControl>
-              <Toggle
-                isLoading={mutateFormField.isLoading}
-                label="Required"
-                {...register('required')}
-              />
-            </Stack>
-          </TabPanel>
-          <TabPanel>
-            <Stack spacing="2rem" divider={<Divider />}>
-              <Toggle
-                isLoading={mutateFormField.isLoading}
-                label="Others"
-                {...register('othersRadioButton')}
-              />
-            </Stack>
-          </TabPanel>
-        </TabPanels>
-
-        <FormFieldDrawerActions
+          <FormLabel>Question</FormLabel>
+          <Input autoFocus {...register('title', requiredValidationRule)} />
+          <FormErrorMessage>{errors?.title?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl
+          isRequired
+          isReadOnly={mutateFormField.isLoading}
+          isInvalid={!!errors.description}
+        >
+          <FormLabel>Description</FormLabel>
+          <Textarea {...register('description')} />
+          <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl
+          isRequired
+          isReadOnly={mutateFormField.isLoading}
+          isInvalid={!!errors.fieldOptions}
+        >
+          <FormLabel>Options</FormLabel>
+          <Textarea {...register('fieldOptions', fieldOptionsValidationRule)} />
+          <FormErrorMessage>{errors?.fieldOptions?.message}</FormErrorMessage>
+        </FormControl>
+        <Toggle
           isLoading={mutateFormField.isLoading}
-          isDirty={isSaveDisabled}
-          buttonText={saveButtonText}
-          handleClick={handleUpdateField}
-          handleCancel={clearActiveField}
+          label="Others"
+          {...register('othersRadioButton')}
         />
-      </DrawerContentContainer>
-    </Tabs>
+        <Toggle
+          isLoading={mutateFormField.isLoading}
+          label="Required"
+          {...register('required')}
+        />
+      </Stack>
+
+      <FormFieldDrawerActions
+        isLoading={mutateFormField.isLoading}
+        isDirty={isSaveDisabled}
+        buttonText={saveButtonText}
+        handleClick={handleUpdateField}
+        handleCancel={clearActiveField}
+      />
+    </DrawerContentContainer>
   )
 }
