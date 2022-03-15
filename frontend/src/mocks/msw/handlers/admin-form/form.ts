@@ -21,7 +21,7 @@ import {
 import { FormLogoState } from '~shared/types/form/form_logo'
 import { DateString } from '~shared/types/generic'
 import { UserDto } from '~shared/types/user'
-import { insertAt } from '~shared/utils/immutable-array-fns'
+import { insertAt, reorder } from '~shared/utils/immutable-array-fns'
 
 export const MOCK_FORM_FIELDS: FormFieldDto[] = [
   {
@@ -348,7 +348,7 @@ export const getAdminFormResponse = (
 }
 
 export const createSingleField = (delay = 500) => {
-  return rest.post<FieldCreateDto, { to: string }, FormFieldDto>(
+  return rest.post<FieldCreateDto, { formId: string }, FormFieldDto>(
     '/api/v3/admin/forms/:formId/fields',
     (req, res, ctx) => {
       const newField = {
@@ -365,14 +365,33 @@ export const createSingleField = (delay = 500) => {
 }
 
 export const updateSingleField = (delay = 500) => {
-  return rest.put<FormFieldDto, Record<string, never>, FormFieldDto>(
-    '/api/v3/admin/forms/:formId/fields/:fieldId',
-    (req, res, ctx) => {
-      const index = mutableFormFields.findIndex(
-        (field) => field._id === req.params.fieldId,
-      )
-      mutableFormFields.splice(index, 1, req.body)
-      return res(ctx.delay(delay), ctx.status(200), ctx.json(req.body))
-    },
-  )
+  return rest.put<
+    FormFieldDto,
+    { formId: string; fieldId: string },
+    FormFieldDto
+  >('/api/v3/admin/forms/:formId/fields/:fieldId', (req, res, ctx) => {
+    const index = mutableFormFields.findIndex(
+      (field) => field._id === req.params.fieldId,
+    )
+    mutableFormFields.splice(index, 1, req.body)
+    return res(ctx.delay(delay), ctx.status(200), ctx.json(req.body))
+  })
+}
+
+export const reorderField = (delay = 500) => {
+  return rest.post<
+    Record<string, never>,
+    { formId: string; fieldId: string },
+    FormFieldDto[]
+  >('/api/v3/admin/forms/:formId/fields/:fieldId/reorder', (req, res, ctx) => {
+    const fromIndex = mutableFormFields.findIndex(
+      (field) => field._id === req.params.fieldId,
+    )
+    mutableFormFields = reorder(
+      mutableFormFields,
+      fromIndex,
+      parseInt(req.url.searchParams.get('to')!),
+    )
+    return res(ctx.delay(delay), ctx.status(200), ctx.json(mutableFormFields))
+  })
 }
