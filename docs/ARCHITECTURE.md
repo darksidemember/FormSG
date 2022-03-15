@@ -1,7 +1,7 @@
 # Architecture
 
 This article aims to give the reader an overview of FormSG's architecture,
-relative to external systems and in terms of how the codebase is organised
+relative to external systems and in terms of how the codebase is organised.
 
 ## Overview
 
